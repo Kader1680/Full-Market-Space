@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function register() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +36,23 @@ export default function Login() {
       onSubmit={handleSubmit}
       className="space-y-4 max-w-md mx-auto mt-10 border p-6 rounded-lg shadow-sm bg-white"
     >
+
+       <div>
+        <label className="mb-2 text-sm text-slate-900 font-medium block">
+          full name
+        </label>
+        <div className="relative flex items-center">
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="px-4 py-3 pr-10 bg-[#f0f1f2] focus:bg-transparent w-full text-sm border border-gray-200 focus:border-black outline-0 rounded-md transition-all"
+          />
+        </div>
+      </div>
+
+
       <div>
         <label className="mb-2 text-sm text-slate-900 font-medium block">
           Email
