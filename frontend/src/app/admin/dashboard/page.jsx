@@ -1,7 +1,50 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Dashboard() {
+
+  const [productcount, setproductcount] = useState(0)
+  const [orderscount, setuserscount] = useState(0)
+
+  useEffect(() => {
+      fetch("http://localhost:8000/api/products")
+        .then((res) => res.json())
+        .then((data) => setproductcount(data.data || []))
+        .catch((err) => console.error("Error fetching products:", err));
+    }, []);
+
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:8000/api/orders", {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch orders");
+        const data = await res.json();
+        setuserscount(data);
+ 
+      } catch (error) {
+        console.error(error);
+        setMessage("Error fetching orders");
+      }
+      setLoading(false);
+    };
+
+    fetchOrders();
+  }, [token]);
+
+
+    
+    
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -30,11 +73,11 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <div className="bg-indigo-600 text-white p-4 rounded-lg shadow-md">
             <p className="text-sm font-medium">Total Products</p>
-            <h2 className="text-2xl font-bold mt-2">120</h2>
+            <h2 className="text-2xl font-bold mt-2">{productcount.length}</h2>
           </div>
           <div className="bg-green-600 text-white p-4 rounded-lg shadow-md">
             <p className="text-sm font-medium">Total Orders</p>
-            <h2 className="text-2xl font-bold mt-2">85</h2>
+            <h2 className="text-2xl font-bold mt-2">{orderscount.length}</h2>
           </div>
           <div className="bg-yellow-500 text-white p-4 rounded-lg shadow-md">
             <p className="text-sm font-medium">Pending Transactions</p>

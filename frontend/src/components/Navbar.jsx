@@ -45,9 +45,9 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="max-sm:hidden">
           <img
-            src="https://readymadeui.com/readymadeui.svg"
+            src="/logo.png"
             alt="logo"
-            className="w-36"
+            className="w-60"
           />
         </Link>
         <Link href="/" className="hidden max-sm:block">

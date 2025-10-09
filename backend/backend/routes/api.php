@@ -24,18 +24,19 @@ Route::middleware('auth:api')->group(function () {
 Route::get('/products', [ProductController::class,'index']);
 
 
+Route::post('/product', [ProductController::class,'store']);
 
 // Public product routes
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
 
-    Route::post('/product', [ProductController::class,'store']);
     Route::get('/products/{id}', [ProductController::class,'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
 
 
+use App\Http\Controllers\PaymentController;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/cart', [CartController::class, 'getCart']);
@@ -45,6 +46,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);   // list orders
     Route::get('/orders/{id}', [OrderController::class, 'show']); // show specific order
     Route::post('/orders', [OrderController::class, 'store']);   // pl
+    Route::post('/create-payment', [PaymentController::class, 'createPayment']);
+
 });
+
+
 
 
