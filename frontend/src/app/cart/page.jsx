@@ -23,7 +23,7 @@ export default function CartPage() {
         if (!res.ok) {
           const text = await res.text();
           console.error("Non-JSON Response:", text);
-          throw new Error("Failed to fetch cart");
+          // throw new Error("Failed to fetch cart");
         }
 
         const data = await res.json();

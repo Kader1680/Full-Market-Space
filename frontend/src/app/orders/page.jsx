@@ -20,12 +20,11 @@ export default function OrdersPage() {
           },
         });
 
-        if (!res.ok) throw new Error("Failed to fetch orders");
+        // if (!res.ok) throw new Error("Failed to fetch orders");
         const data = await res.json();
         setOrders(data);
       } catch (error) {
         console.error(error);
-        setMessage("Error fetching orders");
       }
       setLoading(false);
     };

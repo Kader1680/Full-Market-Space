@@ -1,37 +1,18 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch("http://localhost:8000/api/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.user || data.email) {
-            setUser(data.user || data);
-          }
-        })
-        .catch(() => setUser(null));
-    }
-  }, []);
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+    logout();
     window.location.reload();
   };
 
-  // Ecommerce menu items
+ 
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
@@ -40,15 +21,11 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="flex shadow-md py-4 px-4 sm:px-10 bg-white min-h-[70px] tracking-wide relative z-50">
+    <header className="flex shadow-md py-4 px-4 sm:px-10 bg-black min-h-[70px] tracking-wide relative z-50">
       <div className="flex flex-wrap items-center justify-between gap-5 w-full">
         {/* Logo */}
         <Link href="/" className="max-sm:hidden">
-          <img
-            src="/logo.png"
-            alt="logo"
-            className="w-60"
-          />
+          <img src="/logo.png" alt="logo" className="w-60" />
         </Link>
         <Link href="/" className="hidden max-sm:block">
           <img
@@ -83,11 +60,11 @@ const Navbar = () => {
             {menuItems.map((item) => (
               <li
                 key={item.label}
-                className="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"
+                className="max-lg:border-b text-white max-lg:border-gray-300 max-lg:py-3 px-3"
               >
                 <Link
                   href={item.href}
-                  className="hover:text-blue-700 text-slate-900 block font-medium text-[15px] transition-colors"
+                  className="hover:text-blue-700 text-white-900 block font-medium text-[15px] transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -96,12 +73,15 @@ const Navbar = () => {
           </ul>
         </div>
 
-        
-          {user && user.role === 'admin' && (
-            <Link href="/admin/dashboard" className="px-4 py-2 hover:text-blue-700 text-slate-900 block font-medium text-[15px] ">
-              Dashboard
-            </Link>
-          )}
+        {/* Admin Dashboard Link */}
+        {user && user.role === "admin" && (
+          <Link
+            href="/admin/dashboard"
+            className="px-4 py-2 hover:text-blue-700 text-slate-900 block font-medium text-[15px]"
+          >
+            Dashboard
+          </Link>
+        )}
 
         {/* Auth Section */}
         <div className="flex max-lg:ml-auto space-x-4 items-center">
@@ -124,22 +104,19 @@ const Navbar = () => {
             <>
               <Link
                 href="/login"
-                className="px-4 py-2 text-sm rounded-full font-medium text-slate-900 border border-gray-400 bg-transparent hover:bg-gray-50 transition-all"
+                className="px-4 py-2 text-sm rounded-full font-medium text-black bg-white border"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-2 text-sm rounded-full font-medium text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all"
+                className="px-4 py-2 text-sm rounded-full font-medium text-black bg-white border"
               >
                 Sign up
               </Link>
             </>
           )}
 
-
-
- 
           <button
             id="toggleOpen"
             className="lg:hidden cursor-pointer"

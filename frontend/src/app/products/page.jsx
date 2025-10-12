@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProductsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -17,7 +19,9 @@ export default function ProductsPage() {
     const token = localStorage.getItem("token");
     if (!token) {
       setMessage("Please login to add items to your cart.");
-      return;   
+      router.push("/login");  
+      return;
+      
     }
 
     setLoading(true);
@@ -110,7 +114,7 @@ export default function ProductsPage() {
                   className={`absolute left-0 right-0 bottom-3 cursor-pointer max-w-[88%] mx-auto text-sm px-2 py-2 font-medium w-full rounded-sm text-white tracking-wide outline-none border-none ${
                     loading
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
+                      : "bg-black hover:bg-black-300"
                   }`}
                 >
                   {loading ? "Adding..." : "Add to cart"}

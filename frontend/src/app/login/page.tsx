@@ -43,7 +43,7 @@ export default function Login() {
         <div className="max-w-[480px] w-full">
           <a href="#">
             <img
-              src="https://readymadeui.com/readymadeui.svg"
+              src="/logo.png"
               alt="logo"
               className="w-40 mb-8 mx-auto block"
             />
