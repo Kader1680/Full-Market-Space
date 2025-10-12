@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
 export default function OrderPage() {
   const params = useParams();
@@ -29,7 +29,7 @@ export default function OrderPage() {
         });
         if (!res.ok) throw new Error("Failed to fetch order");
         const data = await res.json();
-        setOrder(data); // keep full order object
+        setOrder(data);
       } catch (err) {
         console.error(err);
         setMessage("Error fetching order");
@@ -39,65 +39,118 @@ export default function OrderPage() {
     fetchOrder();
   }, [token, id]);
 
-  if (!token) return <p className="text-center mt-10">Please login to view this order.</p>;
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (!order) return <p className="text-center mt-10">{message || "Order not found."}</p>;
+  if (!token)
+    return (
+      <div className="text-center mt-20 text-slate-700">
+        Please login to view this order.
+      </div>
+    );
+  if (loading)
+    return (
+      <div className="text-center mt-20 text-slate-700">
+        Loading order details...
+      </div>
+    );
+  if (!order)
+    return (
+      <div className="text-center mt-20 text-slate-700">
+        {message || "Order not found."}
+      </div>
+    );
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto space-y-8">
-
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-gray-300 pb-6 gap-4 md:gap-0">
-          <div className="flex-1">
-            <h2 className="text-2xl font-semibold text-slate-900">Order Details</h2>
-            <h4 className="text-base text-slate-600 mt-2">Order Id: {order.order_number}</h4>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Order Details
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Order ID:{" "}
+              <span className="font-medium text-slate-900">
+                {order.order_number}
+              </span>
+            </p>
+            <span
+              className={`inline-block mt-3 text-sm font-medium px-3 py-1 rounded-full ${
+                order.status === "pending"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
+              {order.status === "pending" ? "Pending Payment" : "Confirmed"}
+            </span>
           </div>
         </div>
 
-        {/* Products and Delivery Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Order Details */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Products Section */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h3 className="text-lg font-semibold text-slate-900 border-b border-gray-200 pb-3">
+              Products
+            </h3>
 
-          {/* Products */}
-          <div>
-            <h3 className="text-base font-semibold text-slate-900 border-b border-gray-300 pb-2">Products</h3>
-            <div className="space-y-4 mt-4">
+            <div className="mt-4 space-y-4">
               {order.items.map((item) => (
-                <div key={item.id} className="grid sm:grid-cols-3 items-center gap-4">
-                  <div className="col-span-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-                    <div>
-                      <h4 className="text-[15px] font-medium text-slate-900">{item.product_name}</h4>
-                      <p className="text-xs font-medium text-slate-600 mt-1">Qty: {item.quantity}</p>
-                    </div>
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0"
+                >
+                  <div>
+                    <h4 className="text-sm font-medium text-slate-900">
+                      {item.product_name}
+                    </h4>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Quantity: {item.quantity}
+                    </p>
                   </div>
-                  <div className="sm:ml-auto">
-                    <h4 className="text-[15px] font-medium text-slate-900">${item.total}</h4>
-                  </div>
+                  <p className="text-sm font-semibold text-slate-800">
+                    ${item.total}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Payment & Billing */}
-          <div className="space-y-6">
-            <div className="bg-gray-100 rounded-md p-4 sm:p-6">
-              <h3 className="text-base font-semibold text-slate-900 border-b border-gray-300 pb-2">Billing Details</h3>
-              <ul className="font-medium mt-4 space-y-2">
-                <li className="flex justify-between text-slate-600 text-sm">
-                  Subtotal <span className="text-slate-900 font-semibold">${order.subtotal}</span>
-                </li>
-                <li className="flex justify-between text-slate-600 text-sm">
-                  Total <span className="text-slate-900 font-semibold">${order.total}</span>
-                </li>
-              </ul>
+          {/* Billing Section */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h3 className="text-lg font-semibold text-slate-900 border-b border-gray-200 pb-3">
+              Billing Summary
+            </h3>
 
+            <ul className="mt-4 space-y-3 text-sm text-slate-600">
+              <li className="flex justify-between">
+                Subtotal
+                <span className="font-medium text-slate-900">
+                  ${order.subtotal}
+                </span>
+              </li>
+              <li className="flex justify-between">
+                Total
+                <span className="font-semibold text-slate-900">
+                  ${order.total}
+                </span>
+              </li>
+            </ul>
+
+            {/* Payment Button */}
+            {order.status === "confirmed" ? (
+              <div className="w-full mt-6 bg-green-600 text-white py-3 text-center rounded-md font-medium">
+                Order Paid Successfully
+              </div>
+            ) : (
               <button
-                className="w-full mt-6 bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
-                onClick={() => alert("Redirect to payment gateway")}
+                className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-md font-medium transition"
+                onClick={() =>
+                  redirect(`/payement?amount=${order.total}&orderId=${order.id}`)
+                }
               >
                 Pay / Checkout
               </button>
-            </div>
+            )}
           </div>
         </div>
       </div>

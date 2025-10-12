@@ -59,9 +59,14 @@ export default function OrdersPage() {
               </div>
               <div className="mt-2 flex justify-between items-center">
                 <span className="text-sm text-gray-600">Total: ${order.total}</span>
-                <span className={`text-sm font-medium ${order.status === 'pending' ? 'text-orange-500' : 'text-green-600'}`}>
-                  {order.status}
-                </span>
+               <span
+                className={`text-sm font-medium ${
+                  order.status === 'pending' ? 'text-orange-500' : 'text-green-600'
+                }`}
+              >
+                {order.status}
+              </span>
+
               </div>
             </Link>
           ))}
