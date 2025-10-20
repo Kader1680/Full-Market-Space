@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
+
+    public function countTransactions()
+    {
+       
+        $transactionCount = Payment::count();
+
+        return response()->json(['transaction_count' => $transactionCount]);
+    }
+
     public function createPayment(Request $request)
     {
         $request->validate([

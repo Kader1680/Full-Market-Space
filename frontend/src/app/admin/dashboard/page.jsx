@@ -5,6 +5,8 @@ export default function Dashboard() {
 
   const [productcount, setproductcount] = useState(0)
   const [orderscount, setuserscount] = useState(0)
+  const [costumers, setcostumers] = useState(0)
+  const [transactions, settransactions] = useState(0)
 
   useEffect(() => {
       fetch("http://localhost:8000/api/products")
@@ -12,6 +14,10 @@ export default function Dashboard() {
         .then((data) => setproductcount(data.data || []))
         .catch((err) => console.error("Error fetching products:", err));
     }, []);
+
+  
+
+  
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -34,7 +40,6 @@ export default function Dashboard() {
         console.error(error);
         setMessage("Error fetching orders");
       }
-      setLoading(false);
     };
 
     fetchOrders();
@@ -42,7 +47,61 @@ export default function Dashboard() {
 
 
     
-    
+
+  useEffect(() => {
+    const fetchcustomers = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:8000/api/costumers", {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch costumers");
+        const data = await res.json();
+        console.log(data);
+        setcostumers(data.users);
+ 
+      } catch (error) {
+        console.error(error);
+      }
+  
+    };
+
+    fetchcustomers();
+  }, [token]);
+
+
+
+    useEffect(() => {
+    const fetchcustomers = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:8000/api/transactions", {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch costumers");
+        const data = await res.json();
+        console.log(data);
+        settransactions(data.transaction_count);
+ 
+      } catch (error) {
+        console.error(error);
+      }
+      
+    };
+
+    fetchcustomers();
+  }, [token]);
+
+
+
 
 
   return (
@@ -54,14 +113,13 @@ export default function Dashboard() {
         </div>
         <nav className="p-6 space-y-4">
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Dashboard</a>
-          <a href="/admin/products/all" className="block text-gray-700 hover:text-indigo-600 font-medium">Product Management</a>
+          <a href="/admin/products/index" className="block text-gray-700 hover:text-indigo-600 font-medium">Product Management</a>
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Order Management</a>
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Transaction Management</a>
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Settings</a>
         </nav>
       </aside>
-
-      {/* Main Content */}
+ 
       <main className="ml-64 p-6">
         {/* Welcome Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -81,11 +139,11 @@ export default function Dashboard() {
           </div>
           <div className="bg-yellow-500 text-white p-4 rounded-lg shadow-md">
             <p className="text-sm font-medium">Pending Transactions</p>
-            <h2 className="text-2xl font-bold mt-2">12</h2>
+            <h2 className="text-2xl font-bold mt-2">{transactions}</h2>
           </div>
           <div className="bg-red-600 text-white p-4 rounded-lg shadow-md">
             <p className="text-sm font-medium">Customers</p>
-            <h2 className="text-2xl font-bold mt-2">320</h2>
+            <h2 className="text-2xl font-bold mt-2">{costumers}</h2>
           </div>
         </div>
 

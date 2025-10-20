@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+
 
 
 
@@ -22,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
 
 
 Route::get('/products', [ProductController::class,'index']);
+Route::get('/products/{id}', [ProductController::class,'show']);
 
 
 Route::post('/product', [ProductController::class,'store']);
@@ -30,13 +33,15 @@ Route::post('/product', [ProductController::class,'store']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
 
-    Route::get('/products/{id}', [ProductController::class,'show']);
+    // Route::get('/products/{id}', [ProductController::class,'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+    Route::get('/costumers', [AuthController::class,'costumerscount']);
+    Route::get('/transactions', [PaymentController::class,'countTransactions']);
+
 });
 
 
-use App\Http\Controllers\PaymentController;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/cart', [CartController::class, 'getCart']);

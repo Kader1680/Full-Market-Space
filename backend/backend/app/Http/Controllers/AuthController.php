@@ -10,6 +10,7 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -78,6 +79,20 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user
         ]);
+    }
+
+
+    public function costumerscount()
+    {
+        
+        $users = User::where("role", "user")->count();
+        $customers = User::with("orders")->get();
+
+        return response()->json([
+            'users' => $users, 
+            'customers' => $customers 
+        ]);
+    
     }
 
 }

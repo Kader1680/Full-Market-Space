@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +12,6 @@ const Navbar = () => {
     window.location.reload();
   };
 
- 
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
@@ -60,11 +59,11 @@ const Navbar = () => {
             {menuItems.map((item) => (
               <li
                 key={item.label}
-                className="max-lg:border-b text-white max-lg:border-gray-300 max-lg:py-3 px-3"
+                className="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"
               >
                 <Link
                   href={item.href}
-                  className="hover:text-blue-700 text-white-900 block font-medium text-[15px] transition-colors"
+                  className="hover:text-blue-400 text-white block font-medium text-[15px] transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -73,11 +72,10 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Admin Dashboard Link */}
         {user && user.role === "admin" && (
           <Link
             href="/admin/dashboard"
-            className="px-4 py-2 hover:text-blue-700 text-slate-900 block font-medium text-[15px]"
+            className="px-4 py-2 text-white hover:text-blue-400 font-medium text-[15px]"
           >
             Dashboard
           </Link>
@@ -87,12 +85,22 @@ const Navbar = () => {
         <div className="flex max-lg:ml-auto space-x-4 items-center">
           {user ? (
             <>
+              {/* Profile Section */}
               <Link
                 href="/profile"
-                className="px-4 py-2 text-sm rounded-full font-medium text-slate-900 border border-gray-400 bg-transparent hover:bg-gray-50 transition-all"
+                className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-800 transition-all"
               >
-                {user.name || "Profile"}
+                <img
+                  src={user.image ? `http://127.0.0.1:8000/storage/${user.image}` : "/user.png"}
+                  alt="profile"
+                  className="w-9 h-9 rounded-full border border-gray-400 object-cover"
+                />
+                <span className="text-white font-medium text-sm truncate max-w-[120px]">
+                  {user.name || "Profile"}
+                </span>
               </Link>
+
+              {/* Logout Button */}
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm rounded-full font-medium text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all"
@@ -117,6 +125,7 @@ const Navbar = () => {
             </>
           )}
 
+          {/* Mobile Menu Toggle */}
           <button
             id="toggleOpen"
             className="lg:hidden cursor-pointer"
@@ -124,7 +133,7 @@ const Navbar = () => {
           >
             <svg
               className="w-7 h-7"
-              fill="#000"
+              fill="#fff"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
             >

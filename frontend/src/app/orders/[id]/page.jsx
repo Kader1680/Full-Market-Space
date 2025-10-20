@@ -138,7 +138,7 @@ export default function OrderPage() {
 
             {/* Payment Button */}
             {order.status === "confirmed" ? (
-              <div className="w-full mt-6 bg-green-600 text-white py-3 text-center rounded-md font-medium">
+              <div className="w-full mt-6 bg-green-100 text-green-600 py-3 text-center rounded-md font-medium">
                 Order Paid Successfully
               </div>
             ) : (

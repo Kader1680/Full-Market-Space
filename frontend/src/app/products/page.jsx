@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link'
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -69,10 +70,12 @@ export default function ProductsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         {products.length > 0 ? (
           products.map((p) => (
-            <div
+            <Link href={`/products/${p.id}`} key={p.id}>
+               <div
               key={p.id}
               className="bg-white flex flex-col rounded-sm overflow-hidden shadow-md hover:scale-[1.01] transition-all relative"
             >
+
               <div className="w-full">
                 <img
                   src={`http://127.0.0.1:8000/storage/${p.image}`}
@@ -121,6 +124,8 @@ export default function ProductsPage() {
                 </button>
               </div>
             </div>
+            </Link>
+           
           ))
         ) : (
           <p className="text-gray-600 text-center col-span-full">
