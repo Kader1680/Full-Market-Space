@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DashbaordController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 
@@ -38,9 +39,17 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::get('/costumers', [AuthController::class,'costumerscount']);
     Route::get('/transactions', [PaymentController::class,'countTransactions']);
+    Route::get('/latest-static', [DashbaordController::class,'latest']);
+    Route::get('/orders', [OrderController::class, 'index']);   // list orders
+    Route::get('/orders/{id}', [OrderController::class, 'show']); // show specific order
+    Route::get('/users',    [AuthController::class, 'index']);
+
+    
+
 
 });
 
+use App\Http\Controllers\ReviewController;
 
 
 Route::middleware('auth:api')->group(function () {
@@ -52,8 +61,14 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show']); // show specific order
     Route::post('/orders', [OrderController::class, 'store']);    
     Route::post('/payment', [PaymentController::class, 'createPayment']);
+  Route::post('/reviews', [ReviewController::class, 'store']);
+
 
 });
+
+ 
+
+Route::get('/reviews/{productId}', [ReviewController::class, 'index']);
 
 
 

@@ -8,6 +8,8 @@ export default function Dashboard() {
   const [costumers, setcostumers] = useState(0)
   const [transactions, settransactions] = useState(0)
 
+  const [latest, setlatest] = useState([]);
+
   useEffect(() => {
       fetch("http://localhost:8000/api/products")
         .then((res) => res.json())
@@ -46,6 +48,7 @@ export default function Dashboard() {
   }, [token]);
 
 
+
     
 
   useEffect(() => {
@@ -75,8 +78,13 @@ export default function Dashboard() {
 
 
 
+
+
     useEffect(() => {
+    const token = localStorage.getItem("token");
+
     const fetchcustomers = async () => {
+
       if (!token) return;
       try {
         const res = await fetch("http://localhost:8000/api/transactions", {
@@ -100,6 +108,40 @@ export default function Dashboard() {
     fetchcustomers();
   }, [token]);
 
+
+  
+    useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const fetchcustomers = async () => {
+
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:8000/api/latest-static", {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch costumers");
+        const data = await res.json();
+        console.log("latest : ",  data);
+        setlatest(data);
+ 
+      } catch (error) {
+        console.error(error);
+      }
+      
+    };
+
+    fetchcustomers();
+  }, [token]);
+
+
+
+
+  
 
 
 
@@ -155,23 +197,32 @@ export default function Dashboard() {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="px-4 py-2 border-b">Product Name</th>
-                  <th className="px-4 py-2 border-b">Category</th>
+                  {/* <th className="px-4 py-2 border-b">Category</th> */}
                   <th className="px-4 py-2 border-b">Price</th>
                   <th className="px-4 py-2 border-b">Stock</th>
                   <th className="px-4 py-2 border-b">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">T-Shirt Nike</td>
-                  <td className="px-4 py-2 border-b">Apparel</td>
-                  <td className="px-4 py-2 border-b">$49.00</td>
-                  <td className="px-4 py-2 border-b">50</td>
-                  <td className="px-4 py-2 border-b space-x-2">
-                    <button className="px-2 py-1 bg-indigo-600 text-white rounded-md text-sm">Edit</button>
-                    <button className="px-2 py-1 bg-red-600 text-white rounded-md text-sm">Delete</button>
-                  </td>
-                </tr>
+            
+                  {
+                    latest.produsts && latest.produsts.map((item) => (
+                         <tr className="hover:bg-gray-50">
+
+                             <td className="px-4 py-2 border-b"> {item.name} </td>
+                            <td className="px-4 py-2 border-b">{item.price}</td>
+                            <td className="px-4 py-2 border-b">{item.stock}</td>
+                            <td className="px-4 py-2 border-b space-x-2">
+                              <button className="px-2 py-1 bg-indigo-600 text-white rounded-md text-sm">Edit</button>
+                              <button className="px-2 py-1 bg-red-600 text-white rounded-md text-sm">Delete</button>
+                            </td>
+                         </tr>
+
+                    
+                    ))
+                  }
+                 
+               
                 {/* More rows... */}
               </tbody>
             </table>
@@ -187,22 +238,32 @@ export default function Dashboard() {
                 <tr>
                   <th className="px-4 py-2 border-b">Order ID</th>
                   <th className="px-4 py-2 border-b">Customer</th>
+                  <th className="px-4 py-2 border-b">Product</th>
                   <th className="px-4 py-2 border-b">Total</th>
-                  <th className="px-4 py-2 border-b">Status</th>
-                  <th className="px-4 py-2 border-b">Actions</th>
+                  {/* <th className="px-4 py-2 border-b">Status</th> */}
+                  {/* <th className="px-4 py-2 border-b">Actions</th> */}
                 </tr>
               </thead>
               <tbody>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">ORD-MPOTLAQX</td>
-                  <td className="px-4 py-2 border-b">Abdelkader</td>
-                  <td className="px-4 py-2 border-b">$246.00</td>
-                  <td className="px-4 py-2 border-b">Pending</td>
-                  <td className="px-4 py-2 border-b space-x-2">
-                    <button className="px-2 py-1 bg-green-600 text-white rounded-md text-sm">View</button>
-                    <button className="px-2 py-1 bg-red-600 text-white rounded-md text-sm">Cancel</button>
-                  </td>
-                </tr>
+                {
+                    latest.produsts && latest.orders.map((item) => (
+                         <tr className="hover:bg-gray-50">
+
+                             <td className="px-4 py-2 border-b"> {item.id} </td>
+                             <td className="px-4 py-2 border-b"> {item.user.name} </td>
+                             <td className="px-4 py-2 border-b"> {item.product_name} </td>
+                            <td className="px-4 py-2 border-b">{item.total}</td>
+                            {/* <td className="px-4 py-2 border-b">{item.stock}</td> */}
+                            {/* <td className="px-4 py-2 border-b space-x-2">
+                              <button className="px-2 py-1 bg-indigo-600 text-white rounded-md text-sm">Edit</button>
+                              <button className="px-2 py-1 bg-red-600 text-white rounded-md text-sm">Delete</button>
+                            </td> */}
+                         </tr>
+
+                    
+                    ))
+                  }
+                 
                 {/* More rows... */}
               </tbody>
             </table>

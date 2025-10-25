@@ -1,7 +1,18 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
+import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faSearch,
+  faCartShopping,
+  faArrowsRotate,
+  faHeart,
+  faChevronDown,
+   faBoxOpen,
+  faGauge, 
+} from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,135 +27,176 @@ const Navbar = () => {
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
     { label: "Cart", href: "/cart" },
-    { label: "Orders", href: "/orders" },
   ];
 
   return (
-    <header className="flex shadow-md py-4 px-4 sm:px-10 bg-black min-h-[70px] tracking-wide relative z-50">
-      <div className="flex flex-wrap items-center justify-between gap-5 w-full">
-        {/* Logo */}
-        <Link href="/" className="max-sm:hidden">
-          <img src="/logo.png" alt="logo" className="w-60" />
+    <header className="bg-[#131722] text-white py-3 px-4 sm:px-10 shadow-md relative z-50">
+      <div className="flex flex-wrap items-center justify-between gap-4 w-full">
+        {/* Brand (Text instead of Logo) */}
+        <Link href="/" className="text-3xl font-extrabold tracking-wide">
+          trendyMart
         </Link>
-        <Link href="/" className="hidden max-sm:block">
-          <img
-            src="https://readymadeui.com/readymadeui-short.svg"
-            alt="logo"
-            className="w-9"
+
+        {/* Search Bar */}
+        <div className="flex flex-1 max-w-3xl bg-white rounded-md overflow-hidden shadow-sm">
+          <div className="flex items-center px-3 text-black font-semibold border-r border-gray-300">
+            <span>All Categories</span>
+            <FontAwesomeIcon icon={faChevronDown} className="ml-2 text-gray-500 text-sm" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search product here..."
+            className="flex-1 px-4 py-2 text-gray-700 outline-none"
           />
-        </Link>
-
-        {/* Menu */}
-        <div
-          id="collapseMenu"
-          className={`${
-            isMenuOpen ? "block" : "hidden"
-          } lg:!block max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50`}
-        >
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border border-gray-200 cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-3.5 h-3.5 fill-black"
-              viewBox="0 0 320.591 320.591"
-            >
-              <path d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"></path>
-              <path d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"></path>
-            </svg>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 flex items-center justify-center">
+            <FontAwesomeIcon icon={faSearch} className="text-lg" />
           </button>
+        </div>
 
-          <ul className="lg:flex gap-x-6 max-lg:space-y-3">
-            {menuItems.map((item) => (
-              <li
-                key={item.label}
-                className="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"
+        {/* Right Section */}
+        <div className="flex items-center gap-6 text-sm font-medium">
+         
+        
+
+          <div className="h-6 w-px bg-gray-600 hidden sm:block"></div>
+
+          {/* Icons Group */}
+          <div className="flex items-center gap-5">
+            {/* <Link href="/compare" className="relative hover:text-blue-400">
+              <FontAwesomeIcon icon={faArrowsRotate} className="text-lg" />
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
+                0
+              </span>
+            </Link>
+
+            <Link href="/wishlist" className="relative hover:text-blue-400">
+              <FontAwesomeIcon icon={faHeart} className="text-lg" />
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
+                0
+              </span>
+            </Link> */}
+
+            <Link href="/cart" className="relative flex items-center gap-2 hover:text-blue-400">
+              <div className="relative">
+                <FontAwesomeIcon icon={faCartShopping} className="text-lg" />
+                <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
+                  0
+                </span>
+              </div>
+              <div className="hidden sm:block leading-tight">
+                <p>My Cart</p>
+                <p className="text-gray-300 text-xs">$0.00</p>
+              </div>
+            </Link>
+          </div>
+
+           {user && (
+              <li className="border-b border-gray-700">
+                <Link
+                  href="/orders"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 transition-all"
+                >
+                  <FontAwesomeIcon icon={faBoxOpen} className="text-white text-sm" />
+                  <span>Orders</span>
+                </Link>
+              </li>
+            )}
+
+            {user && user.role === "admin" && (
+              <li>
+                <Link
+                  href="/admin/dashboard"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 transition-all"
+                >
+                  <FontAwesomeIcon icon={faGauge} className="text-white text-sm" />
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+            )}
+
+            {user ? (
+            <div className="flex items-center gap-4">
+              <Link href="/profile" className="flex items-center gap-2 hover:text-blue-400">
+                <img
+                  src={
+                    user.image
+                      ? `http://127.0.0.1:8000/storage/${user.image}`
+                      : "/user.png"
+                  }
+                  alt="profile"
+                  className="w-9 h-9 rounded-full border border-gray-400 object-cover"
+                />
+                <div className="hidden sm:block leading-tight">
+                  <p className="font-semibold">{user.name}</p>
+                  <p className="text-gray-300 text-xs">Profile</p>
+                </div>
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="bg-white text-black  px-3 py-2 rounded-md text-sm font-semibold"
               >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" className="flex items-center gap-2 hover:text-blue-400">
+              <FontAwesomeIcon icon={faUser} className="text-lg" />
+              <div className="hidden sm:block leading-tight">
+                <p>Account</p>
+                <p className="text-gray-300 text-xs">Log in</p>
+              </div>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className="block sm:hidden mt-3">
+        <button
+          className="text-white text-lg"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          ☰
+        </button>
+        {isMenuOpen && (
+          <ul className="mt-3 bg-[#1a1f2c] rounded-md overflow-hidden">
+            {menuItems.map((item) => (
+              <li key={item.label} className="border-b border-gray-700">
                 <Link
                   href={item.href}
-                  className="hover:text-blue-400 text-white block font-medium text-[15px] transition-colors"
+                  className="block px-4 py-2 hover:bg-blue-600"
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
+            {user && (
+              <li className="border-b border-gray-700">
+                <Link
+                  href="/orders"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 transition-all"
+                >
+                  <FontAwesomeIcon icon={faBoxOpen} className="text-white text-sm" />
+                  <span>Orders</span>
+                </Link>
+              </li>
+            )}
+
+            {user && user.role === "admin" && (
+              <li>
+                <Link
+                  href="/admin/dashboard"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 transition-all"
+                >
+                  <FontAwesomeIcon icon={faGauge} className="text-white text-sm" />
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+            )}
+
           </ul>
-        </div>
-
-        {user && user.role === "admin" && (
-          <Link
-            href="/admin/dashboard"
-            className="px-4 py-2 text-white hover:text-blue-400 font-medium text-[15px]"
-          >
-            Dashboard
-          </Link>
         )}
-
-        {/* Auth Section */}
-        <div className="flex max-lg:ml-auto space-x-4 items-center">
-          {user ? (
-            <>
-              {/* Profile Section */}
-              <Link
-                href="/profile"
-                className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-800 transition-all"
-              >
-                <img
-                  src={user.image ? `http://127.0.0.1:8000/storage/${user.image}` : "/user.png"}
-                  alt="profile"
-                  className="w-9 h-9 rounded-full border border-gray-400 object-cover"
-                />
-                <span className="text-white font-medium text-sm truncate max-w-[120px]">
-                  {user.name || "Profile"}
-                </span>
-              </Link>
-
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm rounded-full font-medium text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="px-4 py-2 text-sm rounded-full font-medium text-black bg-white border"
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="px-4 py-2 text-sm rounded-full font-medium text-black bg-white border"
-              >
-                Sign up
-              </Link>
-            </>
-          )}
-
-          {/* Mobile Menu Toggle */}
-          <button
-            id="toggleOpen"
-            className="lg:hidden cursor-pointer"
-            onClick={() => setIsMenuOpen(true)}
-          >
-            <svg
-              className="w-7 h-7"
-              fill="#fff"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
-        </div>
       </div>
     </header>
   );

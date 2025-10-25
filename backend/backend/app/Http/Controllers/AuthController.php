@@ -95,4 +95,14 @@ class AuthController extends Controller
     
     }
 
+
+    public function index()
+    {
+        User::all();
+        return response()->json([
+            'users' => User::all()
+        ]);
+        
+    }
+
 }
