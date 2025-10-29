@@ -14,7 +14,6 @@ export default function ProductsPage() {
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  // Fetch products
   const fetchProducts = async () => {
     if (!token) return;
     try {
@@ -81,6 +80,7 @@ export default function ProductsPage() {
               <th className="px-6 py-3 text-left text-gray-700 font-semibold">Category</th>
 
               <th className="px-6 py-3 text-left text-gray-700 font-semibold">Price</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-semibold">date</th>
               <th className="px-6 py-3 text-left text-gray-700 font-semibold">Actions</th>
             </tr>
           </thead>
@@ -99,6 +99,16 @@ export default function ProductsPage() {
                 <td className="px-6 py-4 border-b bg-info">
                   {product.category_id ? product.category.name : "No Category"}
                 </td>
+
+                <td className="px-6 py-4 border-b">
+                  {new Date(product.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </td>
+
+
 
                 <td className="px-6 py-4 border-b">${product.price}</td>
                 <td className="px-6 py-4 border-b space-x-2">
@@ -121,7 +131,6 @@ export default function ProductsPage() {
         </table>
       </div>
 
-      {/* Mobile responsive cards */}
       <div className="mt-6 lg:hidden space-y-4">
         {products.map((product) => (
           <div
