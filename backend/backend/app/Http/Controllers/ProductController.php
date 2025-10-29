@@ -10,11 +10,20 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
    
-    public function index() {
-        $products = Product::active()->paginate(12);
-        return response()->json($products);
-    }
- 
+   public function index() {
+    $products = Product::with('category')->active()->paginate(12);
+    
+   
+    $products->getCollection()->transform(function ($product) {
+        if ($product->image) {
+            $product->image_url = asset('storage/' . $product->image);
+        }
+        return $product;
+    });
+
+    return response()->json($products);
+}
+
     public function show($id) {
         $product = Product::findOrFail($id);
         // provide full image URL if exists
@@ -34,6 +43,7 @@ class ProductController extends Controller
             'stock' => 'required|integer',
             'active' => 'boolean',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $product = new Product($request->all());

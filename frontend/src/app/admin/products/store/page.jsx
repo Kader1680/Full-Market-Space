@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useState } from "react";
 
 export default function AddProductPage() {
@@ -9,6 +10,7 @@ export default function AddProductPage() {
     stock: "",
     image: null,
     active: true,
+    category_id: "",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -32,6 +34,7 @@ export default function AddProductPage() {
     formData.append("description", form.description);
     formData.append("price", form.price);
     formData.append("stock", form.stock);
+    formData.append("category_id", form.category_id);
     formData.append("active", form.active ? 1 : 0);
     if (form.image) formData.append("image", form.image);
 
@@ -51,6 +54,7 @@ export default function AddProductPage() {
         stock: "",
         image: null,
         active: true,
+        category_id: "",
       });
     } catch (err) {
       console.error(err);
@@ -59,6 +63,18 @@ export default function AddProductPage() {
       setLoading(false);
     }
   };
+
+
+   const [categories, setCategories] = useState([]);
+  
+    useEffect(() => {
+      fetch("http://localhost:8000/api/categories")
+        .then((res) => res.json())
+        .then((data) => setCategories(data));
+       
+    }, []);
+  
+
 
   return (
     <div className="p-6 mx-auto max-w-xl">
@@ -130,6 +146,22 @@ export default function AddProductPage() {
           />
         </div>
 
+        <div>
+          <label  className="block text-gray-700 font-medium mb-1">Category</label>
+          <select
+            name="category_id"
+            value={form.category_id || ""}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-md p-2"
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+
+
         <div className="flex items-center space-x-2">
           <input
             type="checkbox"
@@ -139,6 +171,8 @@ export default function AddProductPage() {
           />
           <label className="text-gray-700 font-medium">Active</label>
         </div>
+
+
 
         <button
           type="submit"

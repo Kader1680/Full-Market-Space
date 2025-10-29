@@ -9,7 +9,9 @@ use App\Http\Controllers\DashbaordController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 
+use App\Http\Controllers\ReviewController;
 
+use App\Http\Controllers\CategoryController;
 
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -49,7 +51,6 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 
 });
 
-use App\Http\Controllers\ReviewController;
 
 
 Route::middleware('auth:api')->group(function () {
@@ -69,6 +70,9 @@ Route::middleware('auth:api')->group(function () {
  
 
 Route::get('/reviews/{productId}', [ReviewController::class, 'index']);
+
+
+Route::apiResource('categories', CategoryController::class);
 
 
 

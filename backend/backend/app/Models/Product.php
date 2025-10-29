@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['name','description','price','stock','image','active'];
+    protected $fillable = ['name','description','price','stock','image','active', 'category_id'];
 
     public function scopeActive($q) {
         return $q->where('active', true);
@@ -19,5 +19,11 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+     public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
 
 }
