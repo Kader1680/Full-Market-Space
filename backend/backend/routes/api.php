@@ -76,4 +76,13 @@ Route::apiResource('categories', CategoryController::class);
 
 
 
+use App\Http\Controllers\FavoriteController;
 
+Route::middleware('auth:api')->group(function () {
+
+     Route::post('/favorites', [FavoriteController::class, 'addToFavorite']);
+
+     Route::delete('/favorites', [FavoriteController::class, 'removeFromFavorite']);
+
+     Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
+});

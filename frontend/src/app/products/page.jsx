@@ -1,39 +1,100 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from 'next/link'
+import Link from "next/link";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { user } = useAuth();
 
+  const API_URL = "http://localhost:8000/api";
+
+  // ✅ Fetch products
   useEffect(() => {
-    fetch("http://localhost:8000/api/products")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.data || []))
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
+  // ✅ Fetch favorite list
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || !user) return;
+
+    fetch(`${API_URL}/favorites`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setFavorites(data.map((p) => p.product_id)))
+      .catch((err) => console.log("Error favorites:", err));
+  }, [user]);
+
+  // ✅ Toggle favorite
+  const toggleFavorite = async (productId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    const isFavorited = favorites.includes(productId);
+
+    try {
+      const res = await fetch(`${API_URL}/favorites`, {
+        method: isFavorited ? "DELETE" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          product_id: productId,
+          user_id: user.id,
+        }),
+      });
+
+      if (res.ok) {
+        setFavorites((prev) =>
+          isFavorited
+            ? prev.filter((id) => id !== productId)
+            : [...prev, productId]
+        );
+      }
+    } catch (error) {
+      console.log("Error toggling favorite:", error);
+    }
+  };
+
+  // ✅ Add to Cart
   const handleAddToCart = async (productId) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setMessage("Please login to add items to your cart.");
-      router.push("/login");  
+      setMessage("Please login first.");
+      router.push("/login");
       return;
-      
     }
 
     setLoading(true);
-    setMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/api/cart", {
+      const res = await fetch(`${API_URL}/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-           "Accept": "application/json",
+          Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ product_id: productId, quantity: 1 }),
@@ -41,18 +102,14 @@ export default function ProductsPage() {
 
       const data = await res.json();
 
-      if (res.ok) {
-        setMessage("Product added to cart successfully!");
-      } else {
-        setMessage(data.message || "Failed to add product to cart.");
-      }
+      setMessage(res.ok ? "Product added to cart!" : data.message);
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      setMessage("Error connecting to server.");
+      setMessage("Server error.");
     }
 
     setLoading(false);
-    setTimeout(() => setMessage(""), 3000);  
+
+    setTimeout(() => setMessage(""), 3000);
   };
 
   return (
@@ -69,64 +126,73 @@ export default function ProductsPage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         {products.length > 0 ? (
-          products.map((p) => (
-            <Link href={`/products/${p.id}`} key={p.id}>
-               <div
-              key={p.id}
-              className="bg-white flex flex-col rounded-sm overflow-hidden shadow-md hover:scale-[1.01] transition-all relative"
-            >
+          products.map((p) => {
+            const isFavorited = favorites.includes(p.id);
 
-              <div className="w-full">
-                <img
-                  src={`http://127.0.0.1:8000/storage/${p.image}`}
-                  alt={p.name}
-                  className="w-full aspect-[18/24] object-cover object-top"
-                />
-              </div>
-              <div className="p-4">
-                <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                  {p.name}
-                </h5>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                  {p.description}
-                </p>
-                <div className="mt-2 flex items-center flex-wrap gap-2">
-                  <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                    ${p.price}
-                  </h6>
-                  <div
-                    className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                    title="Wishlist"
+            return (
+              <div
+                key={p.id}
+                className="
+                  relative bg-white flex flex-col rounded-md overflow-hidden 
+                  shadow-sm hover:shadow-lg transition-all duration-300 
+                  hover:-translate-y-1
+                "
+              >
+                <Link href={`/products/${p.id}`}>
+                  <img
+                    src={`http://127.0.0.1:8000/storage/${p.image}`}
+                    alt={p.name}
+                    className="w-full aspect-[18/24] object-cover"
+                  />
+                </Link>
+
+                {/* ✅ Favorite heart button */}
+                <button
+                  onClick={() => toggleFavorite(p.id)}
+                  className="
+                    absolute top-3 right-3 w-9 h-9 rounded-full 
+                    bg-white shadow-md flex items-center justify-center
+                    transition-all duration-200
+                    hover:scale-110 hover:shadow-lg active:scale-90
+                  "
+                >
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    className={`
+                      text-xl transition-colors duration-200
+                      ${isFavorited ? "text-red-600" : "text-gray-400 hover:text-red-500"}
+                    `}
+                  />
+                </button>
+
+                <div className="p-4">
+                  <h5 className="text-sm sm:text-base font-semibold text-slate-900">
+                    {p.name}
+                  </h5>
+                  <p className="text-xs text-gray-500 mt-1">{p.description}</p>
+                  <h6 className="text-sm mt-2 font-bold">${p.price}</h6>
+                </div>
+
+                <div className="min-h-[50px] p-4 !pt-0">
+                  <button
+                    type="button"
+                    onClick={() => handleAddToCart(p.id)}
+                    disabled={loading}
+                    className={`
+                      absolute left-0 right-0 bottom-3 max-w-[88%] mx-auto 
+                      text-sm px-2 py-2 font-medium rounded-sm text-white
+                      transition-all duration-200
+                      ${loading
+                        ? "bg-gray-400"
+                        : "bg-black hover:bg-gray-800 active:scale-95"}
+                    `}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16px"
-                      className="fill-slate-800 inline-block"
-                      viewBox="0 0 64 64"
-                    >
-                      <path d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"></path>
-                    </svg>
-                  </div>
+                    {loading ? "Adding..." : "Add to cart"}
+                  </button>
                 </div>
               </div>
-              <div className="min-h-[50px] p-4 !pt-0">
-                <button
-                  type="button"
-                  onClick={() => handleAddToCart(p.id)}
-                  disabled={loading}
-                  className={`absolute left-0 right-0 bottom-3 cursor-pointer max-w-[88%] mx-auto text-sm px-2 py-2 font-medium w-full rounded-sm text-white tracking-wide outline-none border-none ${
-                    loading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-black hover:bg-black-300"
-                  }`}
-                >
-                  {loading ? "Adding..." : "Add to cart"}
-                </button>
-              </div>
-            </div>
-            </Link>
-           
-          ))
+            );
+          })
         ) : (
           <p className="text-gray-600 text-center col-span-full">
             No products available yet.

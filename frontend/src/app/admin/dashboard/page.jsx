@@ -247,7 +247,7 @@ export default function Dashboard() {
               <tbody>
                 {
                     latest.produsts && latest.orders.map((item) => (
-                         <tr className="hover:bg-gray-50">
+                         <tr  className="hover:bg-gray-50">
 
                              <td className="px-4 py-2 border-b"> {item.id} </td>
                              <td className="px-4 py-2 border-b"> {item.user.name} </td>

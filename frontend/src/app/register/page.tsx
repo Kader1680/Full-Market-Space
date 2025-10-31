@@ -48,7 +48,7 @@ export default function Register() {
         {/* Left Side - Info Section */}
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white flex flex-col justify-center p-10 space-y-10">
           <div>
-            <h2 className="text-2xl font-bold mb-3">Welcome to Our Store 🛍️</h2>
+            <h2 className="text-2xl font-bold mb-3">Welcome to Our Store </h2>
             <p className="text-slate-300 leading-relaxed text-sm">
               Create your account to start shopping, tracking orders, and enjoying exclusive offers.
             </p>

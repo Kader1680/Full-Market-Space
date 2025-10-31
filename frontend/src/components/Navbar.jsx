@@ -32,12 +32,10 @@ const Navbar = () => {
   return (
     <header className="bg-[#131722] text-white py-3 px-4 sm:px-10 shadow-md relative z-50">
       <div className="flex flex-wrap items-center justify-between gap-4 w-full">
-        {/* Brand (Text instead of Logo) */}
         <Link href="/" className="text-3xl font-extrabold tracking-wide">
           trendyMart
         </Link>
 
-        {/* Search Bar */}
         <div className="flex flex-1 max-w-3xl bg-white rounded-md overflow-hidden shadow-sm">
           <div className="flex items-center px-3 text-black font-semibold border-r border-gray-300">
             <span>All Categories</span>
@@ -53,7 +51,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Right Section */}
         <div className="flex items-center gap-6 text-sm font-medium">
          
         
@@ -75,6 +72,13 @@ const Navbar = () => {
                 0
               </span>
             </Link> */}
+
+             <Link href="/wishlist" className="relative hover:text-blue-400">
+              <FontAwesomeIcon icon={faHeart} className="text-lg" />
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
+                0
+              </span>
+            </Link> 
 
             <Link href="/cart" className="relative flex items-center gap-2 hover:text-blue-400">
               <div className="relative">

@@ -43,7 +43,7 @@ export default function Login() {
         {/* Left Side */}
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white flex flex-col justify-center p-10 space-y-10">
           <div>
-            <h2 className="text-3xl font-bold mb-3">Welcome Back 👋</h2>
+            <h2 className="text-3xl font-bold mb-3">Welcome Back </h2>
             <p className="text-slate-300 leading-relaxed text-sm">
               Sign in to continue shopping, track your orders, and access your account dashboard.
             </p>
