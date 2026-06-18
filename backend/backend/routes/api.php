@@ -62,7 +62,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show']); // show specific order
     Route::post('/orders', [OrderController::class, 'store']);    
     Route::post('/payment', [PaymentController::class, 'createPayment']);
-  Route::post('/reviews', [ReviewController::class, 'store']);
+    Route::post('/reviews', [ReviewController::class, 'store']);
 
 
 });

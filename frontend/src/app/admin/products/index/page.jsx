@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Loader from "@/components/Loader";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -54,66 +55,134 @@ export default function ProductsPage() {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading products...</p>;
+  if (loading) return  <Loader />;
   if (message) return <p className="text-center mt-10">{message}</p>;
-  if (!products.length)
-    return <p className="text-center mt-10">No products found.</p>;
+  if (!products.length) {
+  return (
+    <div className="p-6 flex flex-col items-center justify-center min-h-[60vh]">
+      
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        Products Management
+      </h2>
+
+      <p className="text-gray-500 mb-6 text-center">
+        No products found. Start by creating your first product.
+      </p>
+
+      <Link
+        href="/admin/products/store"
+        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition"
+      >
+        <FontAwesomeIcon icon={faPlus} />
+        <span>Create Product</span>
+      </Link>
+    </div>
+  );
+}
+     
 
   return (
     <div className="p-6">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Products Management</h2>
-      <Link
-  href="/admin/products/store"
-  className="fixed bottom-8 right-8 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-full shadow-lg transition"
->
-  <FontAwesomeIcon icon={faPlus} />
-  <span className="font-medium">Add Product</span>
-</Link>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Products Management</h2>
 
-      <div className="mt-10 overflow-x-auto hidden lg:block">
-        <table className="min-w-full bg-white shadow rounded-lg border border-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">#</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">Image</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">Name</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">Category</th>
+          <div> 
+          {/* go back to admin panel */}
+          <Link href="/admin/dashboard" className="text-blue-600 hover:underline mb-4 inline-block"  >
+            Back to admin
+          </Link>
+          </div>
 
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">Price</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">date</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, idx) => (
-              <tr key={product.id} className="hover:bg-gray-50 transition">
-                <td className="px-6 py-4 border-b">{idx + 1}</td>
-                <td className="px-6 py-4 border-b">
+
+
+          <Link
+          href="/admin/products/store"
+          className="fixed bottom-8 right-8 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-red px-4 py-3 rounded-full shadow-lg transition"
+        > 
+      <FontAwesomeIcon icon={faPlus} />
+      <span className="font-medium">Add Product</span>
+          </Link>
+
+          <div className="mt-10 overflow-x-auto hidden lg:block">
+            <table className="min-w-full bg-white shadow rounded-lg border border-gray-200">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">#</th>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">Image</th>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">Name</th>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">Category</th>
+
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">Price</th>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">date</th>
+                  <th className="px-6 py-3 text-left text-gray-700 font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, idx) => (
+                  <tr key={product.id} className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 border-b">{idx + 1}</td>
+                    <td className="px-6 py-4 border-b">
+                      <img
+                        src={`http://127.0.0.1:8000/storage/${product.image}`}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    </td>
+                    <td className="px-6 py-4 border-b">{product.name}</td>
+                    <td className="px-6 py-4 border-b bg-info">
+                      {product.category_id ? product.category.name : "No Category"}
+                    </td>
+
+                    <td className="px-6 py-4 border-b">
+                      {new Date(product.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </td>
+
+
+
+                    <td className="px-6 py-4 border-b">${product.price}</td>
+                    <td className="px-6 py-4 border-b space-x-2">
+                      <button
+                        onClick={() => router.push(`/products/edit/${product.id}`)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-6 lg:hidden space-y-4">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="p-4 border rounded-lg shadow flex justify-between items-center"
+              >
+                <div className="flex items-center gap-4">
                   <img
                     src={`http://127.0.0.1:8000/storage/${product.image}`}
                     alt={product.name}
                     className="w-16 h-16 object-cover rounded"
                   />
-                </td>
-                <td className="px-6 py-4 border-b">{product.name}</td>
-                <td className="px-6 py-4 border-b bg-info">
-                  {product.category_id ? product.category.name : "No Category"}
-                </td>
-
-                <td className="px-6 py-4 border-b">
-                  {new Date(product.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </td>
-
-
-
-                <td className="px-6 py-4 border-b">${product.price}</td>
-                <td className="px-6 py-4 border-b space-x-2">
+                  <div>
+                    <h4 className="font-medium text-gray-900">{product.name}</h4>
+                    <p className="text-gray-600">${product.price}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
                   <button
-                    onClick={() => router.push(`/products/edit/${product.id}`)}
+                    onClick={() => router.push(`/admin/products/edit/${product.id}`)}
                     className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                   >
                     Edit
@@ -124,47 +193,10 @@ export default function ProductsPage() {
                   >
                     Delete
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-6 lg:hidden space-y-4">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="p-4 border rounded-lg shadow flex justify-between items-center"
-          >
-            <div className="flex items-center gap-4">
-              <img
-                src={`http://127.0.0.1:8000/storage/${product.image}`}
-                alt={product.name}
-                className="w-16 h-16 object-cover rounded"
-              />
-              <div>
-                <h4 className="font-medium text-gray-900">{product.name}</h4>
-                <p className="text-gray-600">${product.price}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => router.push(`/admin/products/edit/${product.id}`)}
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(product.id)}
-                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
-              >
-                Delete
-              </button>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
     </div>
   );
 }

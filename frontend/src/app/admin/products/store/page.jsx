@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useState } from "react";
 
@@ -44,9 +45,8 @@ export default function AddProductPage() {
         body: formData,
       });
 
-      // if (!res.ok) throw new Error("Failed to add product");
 
-      setMessage("✅ Product added successfully!");
+      setMessage("Product added successfully!");
       setForm({
         name: "",
         description: "",
@@ -56,9 +56,12 @@ export default function AddProductPage() {
         active: true,
         category_id: "",
       });
+      // redirect to admin panel
+
+      window.location.href = "/admin/products/index";
     } catch (err) {
       console.error(err);
-      setMessage("❌ Failed to add product");
+      setMessage("Failed to add product");
     } finally {
       setLoading(false);
     }
@@ -81,6 +84,14 @@ export default function AddProductPage() {
       <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">
         Add New Product
       </h2>
+
+      {/* button to get retun admin panel */}
+
+      <button>
+        <Link to ="/admin/dashboard" className="text-blue-600 hover:underline mb-4 inline-block"  >
+        Back to admin
+        </Link>
+      </button>
 
       <form
         onSubmit={handleSubmit}

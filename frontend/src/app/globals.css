@@ -3,3 +3,20 @@
 body {
   font-family: "Inter", sans-serif;
 }
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(farthest-side, #131722 94%, transparent) top/8px 8px no-repeat,
+    conic-gradient(transparent 30%, #0c266e);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 0);
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(1turn);
+  }
+}

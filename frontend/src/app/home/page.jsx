@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function Home() {
@@ -124,10 +125,14 @@ export default function Home() {
               <p className="text-2xl md:text-3xl font-bold text-blue-600">
                 From $149.99
               </p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-semibold transition-colors">
-                SHOP NOW
-              </button>
-            </div>
+                {/* link button to products page */}
+                <Link
+                  href="/products"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-semibold transition-colors"
+                >
+                  SHOP NOW
+                </Link>
+             </div>
 
             {/* Hero Image - User provides their own */}
             <div className="order-1 md:order-2">
@@ -352,7 +357,7 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-2">Redmi<br />10 Prime<br />Phone</h3>
               <p className="text-3xl font-bold mb-4">$159.00</p>
               <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md font-semibold transition-colors">
-                SHOP NOW
+                <Link href="/products">SHOP NOW</Link>  
               </button>
             </div>
             <div className="absolute right-0 top-0 h-full w-1/2 opacity-20">

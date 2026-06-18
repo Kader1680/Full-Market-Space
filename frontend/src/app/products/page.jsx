@@ -14,10 +14,10 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { user } = useAuth();
+  console.log({user}?.user);
 
   const API_URL = "http://localhost:8000/api";
 
-  // ✅ Fetch products
   useEffect(() => {
     fetch(`${API_URL}/products`)
       .then((res) => res.json())
@@ -25,7 +25,6 @@ export default function ProductsPage() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // ✅ Fetch favorite list
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !user) return;
@@ -41,7 +40,7 @@ export default function ProductsPage() {
       .catch((err) => console.log("Error favorites:", err));
   }, [user]);
 
-  // ✅ Toggle favorite
+
   const toggleFavorite = async (productId) => {
     const token = localStorage.getItem("token");
 
@@ -78,7 +77,7 @@ export default function ProductsPage() {
     }
   };
 
-  // ✅ Add to Cart
+
   const handleAddToCart = async (productId) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -146,7 +145,7 @@ export default function ProductsPage() {
                   />
                 </Link>
 
-                {/* ✅ Favorite heart button */}
+              
                 <button
                   onClick={() => toggleFavorite(p.id)}
                   className="

@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faMinus, faPlus, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import Loader from "@/components/Loader";
+ 
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  // 🔹 Fetch cart items
+  
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -29,6 +31,8 @@ export default function CartPage() {
         setCart(data.items || []);
       } catch (error) {
         console.error("Error fetching cart:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -146,6 +150,7 @@ export default function CartPage() {
     setTimeout(() => setMessage(""), 3000);
   };
 
+  if (loading) return  <Loader />;
   return (
     <div className="min-h-screen bg-[#131722] text-white py-10 px-4">
       <div className="max-w-5xl mx-auto">

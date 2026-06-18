@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import {CartProvider} from "../context/CartContext"
+import {OrderProvider} from "../context/OrderContext"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -19,7 +23,6 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "../context/AuthContext";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
@@ -34,9 +37,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
           <AuthProvider>
-            <Navbar />
-                  {children}
-            <Footer />
+              <CartProvider>
+               <OrderProvider>
+                 <Navbar />
+                <main>{children}</main>
+                <Footer />
+               </OrderProvider>
+              </CartProvider>   
 
           </AuthProvider>
       

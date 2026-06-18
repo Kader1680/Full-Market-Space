@@ -4,7 +4,10 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
+import Loader from "@/components/Loader";
+
 export default function WishlistPage() {
+
   
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +64,7 @@ export default function WishlistPage() {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-xl text-gray-300">Loading...</div>
+      <div className="text-center py-10 text-xl text-gray-300">{<Loader />}</div>
     );
   }
 

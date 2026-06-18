@@ -156,6 +156,10 @@ export default function Dashboard() {
         <nav className="p-6 space-y-4">
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Dashboard</a>
           <a href="/admin/products/index" className="block text-gray-700 hover:text-indigo-600 font-medium">Product Management</a>
+
+          <a href="/admin/categories" className="block text-gray-700 hover:text-indigo-600 font-medium">Categories Management</a>
+
+
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Order Management</a>
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Transaction Management</a>
           <a href="#" className="block text-gray-700 hover:text-indigo-600 font-medium">Settings</a>

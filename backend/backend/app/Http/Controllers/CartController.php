@@ -36,30 +36,30 @@ class CartController extends Controller
 
 
    
-    public function add(Request $request) {
-        $user = auth('api')->user();
-        $request->validate([
-            'product_id'=>'required|exists:products,id',
-            'quantity'=>'required|integer|min:1',
-        ]);
-        $cart = $user->cart()->firstOrCreate(['user_id'=>$user->id]);
-        $product = Product::findOrFail($request->product_id);
-        $price = $product->price;
+    // public function add(Request $request) {
+    //     $user = auth('api')->user();
+    //     $request->validate([
+    //         'product_id'=>'required|exists:products,id',
+    //         'quantity'=>'required|integer|min:1',
+    //     ]);
+    //     $cart = $user->cart()->firstOrCreate(['user_id'=>$user->id]);
+    //     $product = Product::findOrFail($request->product_id);
+    //     $price = $product->price;
 
-        $item = $cart->items()->where('product_id',$product->id)->first();
-        if ($item) {
-            $item->quantity += $request->quantity;
-            $item->price = $price;
-            $item->save();
-        } else {
-            $cart->items()->create([
-                'product_id'=>$product->id,
-                'quantity'=>$request->quantity,
-                'price'=>$price,
-            ]);
-        }
-        return response()->json($cart->load('items.product'));
-    }
+    //     $item = $cart->items()->where('product_id',$product->id)->first();
+    //     if ($item) {
+    //         $item->quantity += $request->quantity;
+    //         $item->price = $price;
+    //         $item->save();
+    //     } else {
+    //         $cart->items()->create([
+    //             'product_id'=>$product->id,
+    //             'quantity'=>$request->quantity,
+    //             'price'=>$price,
+    //         ]);
+    //     }
+    //     return response()->json($cart->load('items.product'));
+    // }
  
     public function remove($itemId) {
         $user = auth('api')->user();
