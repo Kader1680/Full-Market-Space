@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-   
+
    public function index() {
     $products = Product::with('category')->active()->latest()->paginate(12);
-    
-   
+
+
     $products->getCollection()->transform(function ($product) {
         if ($product->image) {
             $product->image_url = asset('storage/' . $product->image);
@@ -33,9 +33,10 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-    
-    public function store(Request $request) {
-    
+
+
+public function store(Request $request) {
+    try {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -55,33 +56,58 @@ class ProductController extends Controller
         $product->save();
 
         return response()->json($product, 201);
-    }
 
-  
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
     public function update(Request $request, $id) {
-        $product = Product::findOrFail($id);
-        $this->validate($request, [
-            'name'=>'sometimes|string|max:255',
-            'price'=>'sometimes|numeric|min:0',
-            'stock'=>'sometimes|integer|min:0',
-            'image'=>'nullable|image|max:5120',
-        ]);
-        $product->fill($request->only(['name','description','price','stock','active']));
-        if ($request->hasFile('image')) {
-            // delete old
-            if ($product->image) Storage::disk('public')->delete($product->image);
-            $product->image = $request->file('image')->store('products','public');
-        }
-        $product->save();
-        if ($product->image) $product->image_url = asset('storage/'.$product->image);
-        return response()->json($product);
+            try {
+                $product = Product::findOrFail($id);
+                    $this->validate($request, [
+                        'name'=>'sometimes|string|max:255',
+                        'price'=>'sometimes|numeric|min:0',
+                        'stock'=>'sometimes|integer|min:0',
+                        'image'=>'nullable|image|max:5120',
+                    ]);
+                    $product->fill($request->only(['name','description','price','stock','active']));
+                    if ($request->hasFile('image')) {
+                        // delete old
+                        if ($product->image) Storage::disk('public')->delete($product->image);
+                        $product->image = $request->file('image')->store('products','public');
+                    }
+                    $product->save();
+                    if ($product->image) $product->image_url = asset('storage/'.$product->image);
+                    return response()->json($product);
+            } catch (\Exception $e) {
+                    return response()->json([
+                                    'error' => $e->getMessage()
+                                ], 500);
+            }
     }
 
     // delete (protected)
     public function destroy($id) {
-        $product = Product::findOrFail($id);
-        if ($product->image) Storage::disk('public')->delete($product->image);
-        $product->delete();
-        return response()->json(['message'=>'Deleted']);
+
+            try {
+                $product = Product::findOrFail($id);
+                if ($product->image) Storage::disk('public')->delete($product->image);
+                $product->delete();
+                return response()->json(['message'=>'Deleted Products.'], 200);
+            } catch (\Exception $e) {
+                    return response()->json([
+                        'error' => $e->getMessage()
+                    ], 500);
+            }
+
     }
 }
