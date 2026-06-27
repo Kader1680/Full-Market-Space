@@ -76,8 +76,11 @@ public function store(Request $request) {
                     $this->validate($request, [
                         'name'=>'sometimes|string|max:255',
                         'price'=>'sometimes|numeric|min:0',
+                        'description' => 'string|nullable',
                         'stock'=>'sometimes|integer|min:0',
                         'image'=>'nullable|image|max:5120',
+                        'active' => 'boolean',
+                        'category_id' => 'nullable|exists:categories,id'
                     ]);
                     $product->fill($request->only(['name','description','price','stock','active']));
                     if ($request->hasFile('image')) {
@@ -87,13 +90,18 @@ public function store(Request $request) {
                     }
                     $product->save();
                     if ($product->image) $product->image_url = asset('storage/'.$product->image);
-                    return response()->json($product);
-            } catch (\Exception $e) {
+                    return response()->json(['products' => $product], 200);
+            }catch (\Illuminate\Validation\ValidationException $e) {
                     return response()->json([
-                                    'error' => $e->getMessage()
-                                ], 500);
+                        'errors' => $e->errors()
+                    ], 422);
+
+            }catch (\Exception $e) {
+                            return response()->json([
+                                            'error' => $e->getMessage()
+                                        ], 500);
+                    }
             }
-    }
 
     // delete (protected)
     public function destroy($id) {

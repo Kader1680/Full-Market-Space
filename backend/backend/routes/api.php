@@ -37,6 +37,7 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 
     // Route::get('/products/{id}', [ProductController::class,'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
+    // Route::match(['put', 'post'], '/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::get('/costumers', [AuthController::class,'costumerscount']);
     Route::get('/transactions', [PaymentController::class,'countTransactions']);
@@ -56,8 +57,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/cart', [CartController::class, 'getCart']);
     Route::post('/cart', [CartController::class, 'addToCart']);
     Route::delete('/cart/{id}', [CartController::class, 'remove']);
-
+    
     Route::get('/orders', [OrderController::class, 'index']);   // list orders
+
     Route::get('/orders/{id}', [OrderController::class, 'show']); // show specific order
     Route::post('/orders', [OrderController::class, 'store']);
     Route::post('/payment', [PaymentController::class, 'createPayment']);
