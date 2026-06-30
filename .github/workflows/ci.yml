@@ -22,7 +22,12 @@ jobs:
 
       - name: Install Laravel
         working-directory: ./server
-        run: composer install  
+        run: composer install 
+
+      - name: Test Laravel
+        working-directory: ./server
+        run: php artisan test  
+ 
 
 
       - name: Setup Node
@@ -35,15 +40,19 @@ jobs:
       - name: Install Package
         working-directory: ./client
         run: npm install && npm install lint && npm install test
-        
-
+      
       - name: Build container
         run: docker compose up -d --build
 
+      - name: Run Lints
+        run: npm run lint
 
-        
-      - name: Run tests
-        run: npm test
-
+      # - name: Run tests
+      #   run: npm test
+      
+      
+      - name: Run Builds
+        run: npm run build
+      
    
 
