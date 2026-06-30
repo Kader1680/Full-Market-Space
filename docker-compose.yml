@@ -1,0 +1,52 @@
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: next_client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    depends_on:
+      - server
+    networks:
+      - app_net
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: laravel_server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/var/www
+    depends_on:
+      - mysql
+    networks:
+      - app_net
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: onionspace
+      MYSQL_USER: trendy
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_net
+
+volumes:
+  mysql_data:
+
+networks:
+  app_net:
