@@ -20,7 +20,8 @@ jobs:
           php-version: 8.2
       
       - name: Setup Laravel
-        run: cd server
+        run:  |
+             cd server
              install composer --no-interaction --prefer-dist
       
       - name: Setup Node
@@ -30,7 +31,8 @@ jobs:
           node-version: 20
 
       - name: install dependancy
-        run: cd client
+        run: |
+             cd client
              npm install
              npm install lint
              npm install test
