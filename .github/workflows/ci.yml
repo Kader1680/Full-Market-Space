@@ -37,13 +37,13 @@ jobs:
         run: npm install && npm install lint && npm install test
         
 
-      - name: Run tests
-        run: npm test
-
       - name: Build container
         run: docker compose up -d --build
 
 
         
+      - name: Run tests
+        run: npm test
+
    
 
