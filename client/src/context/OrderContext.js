@@ -1,6 +1,7 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
+
 
 const OrderContext = createContext();
 
@@ -8,7 +9,7 @@ export function OrderProvider({ children }) {
   const { user } = useAuth();
   const [orderCount, setOrderCount] = useState(0);
 
-  async function fetchOrder() {
+  const fetchOrder = useCallback ( async  () => {
     if (!user) {
       setOrderCount(0);
       return;
@@ -31,11 +32,11 @@ export function OrderProvider({ children }) {
     } catch (error) {
       console.error(error);
     }
-  }
+  }, [user]); 
 
   useEffect(() => {
     fetchOrder();
-  }, [user]);
+  }, [fetchOrder]);
 
   return (
     <OrderContext.Provider

@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
@@ -7,8 +7,7 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
   const { user } = useAuth();
   const [cartCount, setCartCount] = useState(0);
-
-  async function fetchCart() {
+  const fetchCart = useCallback(async () => {
     if (!user) {
       setCartCount(0);
       return;
@@ -17,6 +16,7 @@ export function CartProvider({ children }) {
     const token = localStorage.getItem("token");
 
     try {
+
       const res = await fetch("http://127.0.0.1:8000/api/cart", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -25,22 +25,20 @@ export function CartProvider({ children }) {
       });
 
       const data = await res.json();
-      console.log(data.items?.length)
+      console.log(data.items?.length);
 
       setCartCount(data.items?.length || 0);
     } catch (error) {
       console.error(error);
     }
-  }
+  }, [user]); 
 
   useEffect(() => {
     fetchCart();
-  }, [user]);
+  }, [fetchCart]);
 
   return (
-    <CartContext.Provider
-      value={{ cartCount, setCartCount }}
-    >
+    <CartContext.Provider value={{ cartCount, setCartCount, fetchCart }}>
       {children}
     </CartContext.Provider>
   );

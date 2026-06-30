@@ -30,7 +30,7 @@ export default function UsersManagement() {
       setCount(data.users?.length || data.length || 0);
     } catch (err) {
       console.error("Error fetching users:", err);
-      setMessage("❌ Failed to load users.");
+      setMessage(" Failed to load users.");
       redirect('/login');
     } finally {
       setLoading(false);

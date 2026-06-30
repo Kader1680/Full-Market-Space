@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
+import Image from "next/image";
 export default function Home() {
   // Sample product data - replace with API call later
   const [products] = useState([
@@ -136,7 +136,7 @@ export default function Home() {
 
             {/* Hero Image - User provides their own */}
             <div className="order-1 md:order-2">
-              <img
+              <Image
                 src="/hero-model.png"
                 alt="JBL Wireless Headphones"
                 className="w-full h-auto object-contain"
