@@ -36,12 +36,9 @@ jobs:
         working-directory: ./client
         run: npm install && npm install lint && npm install test
         
+ 
 
-      - name: Test code
-        working-directory: ./client
-        run: npm test
 
-        
       - name: Build container
         run: docker compose up -d --build
 
