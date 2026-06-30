@@ -29,11 +29,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm 
+          cache: 'npm' 
       
       - name: Install Package
         working-directory: ./client
-        run: npm  install && npm install lint && npm test
+        run: npm install && npm install lint && npm test
         
       - name: Build container
         run: docker compose up -d --build
