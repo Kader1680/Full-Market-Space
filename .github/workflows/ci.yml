@@ -1,42 +1,44 @@
-name: CI Pipeline
+name : "ci trendy"
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+   push:
+      branches: ["main"]
+   pull_request:
+      branches: ["main"]
 
 jobs:
-  test:
+  build:
+    # Use the latest stable Ubuntu runner provided by GitHub
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
-      
-      - name: laravel setup
-        working-directory: ./server
-        run: composer install --no-interaction --prefer-dist
-           
-      - name: Setup Node
 
+      - name: Install Laravel
+        working-directory: ./server
+        run: composer install  
+
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: install dependancy
+          node-version: 22
+          cache: npm 
+      
+      - name: Install Package
         working-directory: ./client
-      
-        run: npm install && npm install lint && npm install test
+        run: npm  install && npm install lint && npm test
+        
+      - name: Build container
+        run: docker compose up -d --build
 
-      - name: build container
-        run : docker compose build
 
+        
    
-      # 3. Instal dependencies
-      
+
