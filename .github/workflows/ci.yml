@@ -34,7 +34,7 @@ jobs:
       
       - name: Install Package
         working-directory: ./client
-        run: npm install && npm install lint
+        run: npm install && npm install lint && npm install test
         
 
       - name: Run tests
