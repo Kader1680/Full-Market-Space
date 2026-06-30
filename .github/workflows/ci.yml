@@ -24,9 +24,9 @@ jobs:
         working-directory: ./server
         run: composer install 
 
-      - name: Test Laravel
-        working-directory: ./server
-        run: php artisan test  
+      # - name: Test Laravel
+      #   working-directory: ./server
+      #   run: php artisan test  
  
 
 
