@@ -30,10 +30,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm' 
+          cache-dependency-path: ./client/package-lock.json
       
       - name: Install Package
         working-directory: ./client
-        run: npm install && npm install lint && npm test
+        run: npm install && npm install lint && npm install test
         
       - name: Build container
         run: docker compose up -d --build
