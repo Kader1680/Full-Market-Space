@@ -34,10 +34,11 @@ jobs:
       
       - name: Install Package
         working-directory: ./client
-        run: npm install && npm install lint && npm install test
+        run: npm install && npm install lint
         
- 
 
+      - name: Run tests
+        run: npm test
 
       - name: Build container
         run: docker compose up -d --build
