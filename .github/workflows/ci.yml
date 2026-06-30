@@ -20,7 +20,8 @@ jobs:
           php-version: 8.2
       
       - name: laravel setup
-        run: cd server && composer install --no-interaction --prefer-dist
+        working-directory: ./server
+        run: composer install --no-interaction --prefer-dist
            
       - name: Setup Node
 
@@ -29,7 +30,9 @@ jobs:
           node-version: 20
 
       - name: install dependancy
-        run: cd client && npm install && npm install lint && npm install test && npm run build
+        working-directory: ./client
+      
+        run: npm install && npm install lint && npm install test
 
       - name: build container
         run : docker compose build
