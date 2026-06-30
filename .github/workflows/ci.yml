@@ -19,13 +19,9 @@ jobs:
         with:
           php-version: 8.2
       
-      - name: Access the backend
-        run: cd server
+      - name: laravel setup
+        run: cd server && composer install --no-interaction --prefer-dist
            
-
-      - name: install composer
-        run: install composer --no-interaction --prefer-dist
-      
       - name: Setup Node
 
         uses: actions/setup-node@v4
@@ -33,12 +29,11 @@ jobs:
           node-version: 20
 
       - name: install dependancy
-        run: |
-             cd client
-             npm install
-             npm install lint
-             npm install test
-             npm run build
+        run: cd client && 
+             npm install && 
+             npm install lint  &&
+             npm install test  &&
+             npm run build  &&
 
       - name: build container
         run : docker compose build
