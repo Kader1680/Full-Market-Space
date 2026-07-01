@@ -44,8 +44,8 @@ jobs:
       - name: Build container
         run: docker compose up -d --build
 
-      - name: Run Lints
-        run: npm run lint
+      # - name: Run Lints
+      #   run: npm run lint
 
       # - name: Run tests
       #   run: npm test

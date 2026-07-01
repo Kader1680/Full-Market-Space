@@ -1,6 +1,6 @@
 # Full-Market-Space
 
-System Online Sell Products, user can browse all products, view by detail, place order, pay online (stripe or paypal)
+System Online Sell Products, user can browse products, view by detail, place order, pay online (stripe or paypal)
 
 
 ## Features of Project
