@@ -25,7 +25,8 @@ services:
     volumes:
       - ./server:/var/www
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - app_net
 
@@ -44,9 +45,15 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - app_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      timeout: 5s
+      retries: 5
+      interval: 5s
 
 volumes:
   mysql_data:
 
 networks:
   app_net:
+
