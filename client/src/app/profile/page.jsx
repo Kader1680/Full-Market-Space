@@ -9,52 +9,34 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const router = useRouter();
+useEffect(() => {
+  fetch("http://localhost:8000/api/profile", {
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        router.push("/login");
+        return null;
+      }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token)
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    fetch("http://localhost:8000/api/profile", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+      return res.json();
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.user) {
-          setUser(data.user);
-        } else {
-          setError("Failed to fetch profile");
-        }
-      })
-      .catch(() => setError("Network error"));
-  }, [router]);
+    .then((data) => {
+      if (data?.user) {
+        setUser(data.user);
+      }
+    })
+    .catch(() => setError("Network error"));
+}, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
+      localStorage.removeItem("token");
+      router.push("/login");
   };
-
-  if (error){
-    console.log(error)
-  }
-    // return (
-    //   <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-2xl shadow-md text-red-600 text-center border border-red-200">
-    //     {error}
-    //   </div>
-    // );
-
  
-    // return (
-    //   <div className="flex justify-center items-center min-h-[60vh]">
-    //     <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-    //   </div>
-    // );
 
   return (
     

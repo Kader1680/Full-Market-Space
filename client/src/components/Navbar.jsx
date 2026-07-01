@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useOrder } from "../context/OrderContext";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -16,20 +15,22 @@ import {
    faBoxOpen,
   faGauge, 
 } from "@fortawesome/free-solid-svg-icons";
-// count of carts items 
+import Login from "@/app/login/page";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, loading , logout} = useAuth();
 
   const {cartCount} =  useCart();
   const {orderCount} =  useOrder();
  
 
   const API_URL = "http://localhost:8000/api";
-  const handleLogout = () => {
-    logout();
-    window.location.reload();
-  };
+    const handleLogout = async () => {
+    await logout();
+ 
+  window.location.href = "/login"; 
+};
 
   const menuItems = [
     { label: "Home", href: "/" },
@@ -37,7 +38,7 @@ const Navbar = () => {
     { label: "Cart", href: "/cart" },
   ];
 
- 
+  if (loading) return null;
 
   return (
     <header className="bg-[#131722] text-white py-3 px-4 sm:px-10 shadow-md relative z-50">
@@ -47,6 +48,7 @@ const Navbar = () => {
           Trend
         </Link>
         </div>
+        
 
         <div className="flex flex-1 max-w-3xl bg-white rounded-md overflow-hidden shadow-sm">
           <div className="flex items-center px-3 text-black font-semibold border-r border-gray-300">
@@ -69,22 +71,8 @@ const Navbar = () => {
 
           <div className="h-6 w-px bg-gray-600 hidden sm:block"></div>
 
-          {/* Icons Group */}
           <div className="flex items-center gap-5">
-            {/* <Link href="/compare" className="relative hover:text-blue-400">
-              <FontAwesomeIcon icon={faArrowsRotate} className="text-lg" />
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
-                0
-              </span>
-            </Link>
-
-            <Link href="/wishlist" className="relative hover:text-blue-400">
-              <FontAwesomeIcon icon={faHeart} className="text-lg" />
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
-                0
-              </span>
-            </Link> */}
-
+           
              <Link href="/wishlist" className="relative hover:text-blue-400">
               <FontAwesomeIcon icon={faHeart} className="text-lg" />
               <span className="absolute -top-2 -right-2 bg-blue-600 text-xs font-bold rounded-full px-1.5">
@@ -92,13 +80,10 @@ const Navbar = () => {
               </span>
             </Link> 
 
-            {/* link of the products page */}
-
             <Link href="/products" className="relative hover:text-blue-400">
               Products
             </Link>
            
-
             <Link href="/cart" className="relative flex items-center gap-2 hover:text-blue-400">
               <div className="relative">
                 <FontAwesomeIcon icon={faCartShopping} className="text-lg" />

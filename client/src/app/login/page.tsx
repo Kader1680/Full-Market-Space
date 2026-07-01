@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setUser, refreshAuth } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,14 +20,24 @@ export default function Login() {
       const res = await fetch("http://localhost:8000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", 
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
-      if (res.ok && data.token) {
-        localStorage.setItem("token", data.token);
-        router.push("/products");
+      if (res.ok) {
+        if (data.token) {
+          localStorage.setItem("auth_token", data.token);
+        }
+
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          await refreshAuth();
+        }
+
+        router.push("/orders");
       } else {
         setError(data.message || "Invalid credentials");
       }

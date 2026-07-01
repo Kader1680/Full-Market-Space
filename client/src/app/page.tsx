@@ -133,6 +133,8 @@ export default function Home() {
             {/* Hero Image - User provides their own */}
             <div className="order-1 md:order-2">
               <Image
+                width={200}
+                height={200}
                 src="/hero-model.png"
                 alt="JBL Wireless Headphones"
                 className="w-full h-auto object-contain"

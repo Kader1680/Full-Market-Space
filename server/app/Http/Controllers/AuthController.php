@@ -57,30 +57,37 @@ class AuthController extends Controller
         }
 
         return response()->json([
+            'status' => 200,
             'message' => 'Login successful',
-            'token'   => $token,
-            'user'    => auth('api')->user(),
-        ]);
-    }
+            'token' => $token,
+            'user' => auth('api')->user()
+        ])->cookie(
+            'auth_token',
+            $token,
+            60 * 24, // minutes
+            '/',
+            null,
+            app()->environment('production'),
+            true, // httpOnly
+            false,
+            'Lax'
+        );
+        }
 
     public function logout()
     {
-        try {
-            auth('api')->logout();
-            return response()->json(['message' => 'Logout successful']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Token invalid or expired'], 500);
-        }
+        auth('api')->logout();
+        return response()
+        ->json(['message' => 'Logged out'])
+        ->cookie('auth_token', '', -1);
     }
 
     public function profile()
     {
-        $user = auth('api')->user();
-        return response()->json([
-            'user' => $user
+    return response()->json([
+            'user' => auth('api')->user()
         ]);
     }
-
 
     public function costumerscount()
     {

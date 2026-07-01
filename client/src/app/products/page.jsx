@@ -8,6 +8,8 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ProductsPage() {
+
+  
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState([]); 
@@ -19,10 +21,12 @@ export default function ProductsPage() {
   const API_URL = "http://localhost:8000/api";
 
   useEffect(() => {
+    console.time("Fetching products...");
     fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.data || []))
       .catch((err) => console.error("Error fetching products:", err));
+      
   }, []);
 
   useEffect(() => {
