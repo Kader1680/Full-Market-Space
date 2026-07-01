@@ -23,10 +23,6 @@ jobs:
       - name: Install Laravel
         working-directory: ./server
         run: composer install 
-
-      - name: Run Migration
-        working-directory: ./server
-        run: php artisan migrate --force  
  
       - name: Setup Node
         uses: actions/setup-node@v4
